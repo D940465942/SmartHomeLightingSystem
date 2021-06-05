@@ -1,3 +1,4 @@
+
 /* 
     Pins Info of Electronic Components
     These pin and parameters could be configured by users
@@ -6,73 +7,76 @@ bool overallSwitch = false;                 // overall and scene control switch
 const int checkingBreak = 1000;             // The check break between each iteration in the loop
 
 // Bedroom Scene
-const int bedroomLED_1 = 1;                 // LEDs
-const int bedroomLED_2 = 2;
-const int bedroomLED_3 = 3;
+const int bedroomLED_1 = 5;                 // LEDs
+const int bedroomLED_2 = 13;
+const int bedroomLED_3 = 15;
 const int bedroomHumanDetection = 7;        // The human detection sensor
-const int bedroomInfraredReceiver = 8;      // The infrared receiver sensor
+const int bedroomInfraredReceiver = 16;      // The infrared receiver sensor
 const int bedroomLightIntensity = 9;        // The light intensity sensor
-const int bedroomDuration = 10000;          // The time for lighing be on after people live 
+const int bedroomDuration = 10000;          // The time for lighing be on after people live  
 int currentBedroomDuration = 0;             // record the current duration that human has left
 bool bedroomSwitch = false;                 // switch of each scene
 
 // Balcony Scene
-const int balconyLED_1 = 1;
+const int balconyLED_1 = 5;
 const int balconyHumanDetection = 7;        // The human detection sensor
-const int balconyInfraredReceiver = 8;      // The infrared receiver sensor
+const int balconyInfraredReceiver = 16;      // The infrared receiver sensor
 const int balconyLightIntensity = 9;        // The light intensity sensor
 const int balconyDuration = 10000;          // The time for lighing be on after people live
 int currentBalconyDuration = 0;             // record the current duration that human has left
 bool balconySwitch = false;                 // switch of each scene
 
 // Living Room Scene
-const int livingRoomLED_1 = 1;              // LEDs
-const int livingRoomLED_2 = 2;
-const int livingRoomLED_3 = 3;
-const int livingRoomLED_4 = 4;
-const int livingRoomLED_5 = 5;
-const int livingRoomLED_6 = 6;
+const int livingRoomLED_1 = 5;             // LEDs
+const int livingRoomLED_2 = 13;
+const int livingRoomLED_3 = 15;
+const int livingRoomLED_4 = 16;
+const int livingRoomLED_5 = 31;
+const int livingRoomLED_6 = 32;
 const int livingRoomHumanDetection = 7;     // The human detection sensor
-const int livingRoomInfraredReceiver = 8;   // The infrared receiver sensor
+const int livingRoomInfraredReceiver = 16;   // The infrared receiver sensor
 const int livingoomDuration = 10000;        // The time for lighing be on after people live
 int currentLivingoomDuration = 0;           // record the current duration that human has left
 bool livingRoomSwitch = false;              // switch of each scene
 
 // Dining Room Scene
-const int diningRoomLED_1 = 1;              // LEDs
-const int diningRoomLED_2 = 2;
-const int diningRoomLED_3 = 3;
+const int diningRoomLED_1 = 5;             // LEDs
+const int diningRoomLED_2 = 13;
+const int diningRoomLED_3 = 15;
 const int diningHumanDetection = 7;         // The human detection sensor
-const int diningInfraredReceiver = 8;       // The infrared receiver sensor
+const int diningInfraredReceiver = 16;       // The infrared receiver sensor
 const int diningDuration = 10000;           // The time for lighing be on after people live
 int currentDiningDuration = 0;              // record the current duration that human has left
 bool diningRoomSwitch = false;              // switch of each scene
 
 // Bathroom Scene
-const int bathroomLED_1 = 1;                // LEDs
+const int bathroomLED_1 = 5;               // LEDs
 const int bathroonHumanDetection = 7;       // The human detection sensor
-const int bathroomInfraredReceiver = 8;     // The infrared receiver sensor
+const int bathroomInfraredReceiver = 16;     // The infrared receiver sensor
 const int bathroomDuration = 10000;         // The time for lighing be on after people live
 int currentBathroomDuration = 0;            // record the current duration that human has left
 bool bathroomSwitch = false;                // switch of each scene
 
 // Kitchen Scene
-const int kitchenLED_1 = 1;                 // LEDs
+const int kitchenLED_1 = 5;                // LEDs
 const int kitchenHumanDetection = 7;        // The human detection sensor
-const int kitchenInfraredReceiver = 8;      // The infrared receiver sensor
+const int kitchenInfraredReceiver = 16;      // The infrared receiver sensor
 const int kitchenDuration = 10000;          // The time for lighing be on after people live
 int currentKitchenDuration = 0;             // record the current duration that human has left
 bool kitchenSwitch = false;                 // switch of each scene
 
 // Corridor Scene
-const int corridorLED_1 = 1;                // LEDs
-const int corridorLED_2 = 2;
+const int corridorLED_1 = 5;               // LEDs
+const int corridorLED_2 = 13;
 const int corridorHumanDetection = 7;       // The human detection sensor
-const int corridorLightIntensity = 9;       // The light intensity sensor
-const int corridorVoiceDetection = 10;      // The voice detection sensor
+const int corridorLightIntensity = 16;       // The light intensity sensor
+const int corridorVoiceDetection = 8;      // The voice detection sensor
 const int corridorDuration = 10000;         // The time for lighing be on after people live
 int currentCorridorDuration = 0;            // record the current duration that human has left
 
+bool gatheringSwitch = false;
+bool emergencySwitch = false;
+bool corridorSwitch = false;
 
 void setup()
 {
@@ -132,6 +136,14 @@ void setup()
 void overall_control(bool command)
 {
     overallSwitch = command;
+    if(command)
+    {
+      Serial.println("Overall Switch has been turned on!");
+    }
+    else
+    {
+     Serial.println("Overall Switch has been turned off!");
+    }
 }
 
 // detect human
@@ -141,6 +153,7 @@ bool human_detection(int pin)
     
     if(status == HIGH)
     {
+        Serial.println("Human Detected!");
         return true;
     }
     return false;
@@ -153,7 +166,8 @@ bool receive_infrared(int pin)
     
     if(status == HIGH)
     {
-        return true;
+        //Serial.println("Infrared Detected!");
+        //return true;
     }
     return false;
 }
@@ -171,6 +185,7 @@ bool voice_detection(int pin)
     
     if(status == HIGH)
     {
+      Serial.println("Voice Detected!");
         return true;
     }
 
@@ -416,7 +431,7 @@ void living_room_gathering_scene()
         livingRoomSwitch = livingRoomSwitch ? false : true;
     }
     
-    if(overallSwitch && livingRoomSwitch)
+    if(overallSwitch && gatheringSwitch)
     {
         if(human_detection(livingRoomHumanDetection))
         {
@@ -457,55 +472,58 @@ void living_room_gathering_scene()
 void emergency_scene()
 {
     // When in emergency, the LEDs will blink quickly
-    while(true)
+    if(emergencySwitch)
     {
-        digitalWrite(bedroomLED_1, HIGH);
-        delay(100);
-        digitalWrite(bedroomLED_1, LOW);
-        delay(100);
-        
-        digitalWrite(balconyLED_1, HIGH);
-        delay(100);
-        digitalWrite(balconyLED_1, LOW);
-        delay(100);
-
-        digitalWrite(livingRoomLED_1, HIGH);
-        delay(100);
-        digitalWrite(livingRoomLED_1, LOW);
-        delay(100);
-
-        digitalWrite(diningRoomLED_1, HIGH);
-        delay(100);
-        digitalWrite(diningRoomLED_1, LOW);
-        delay(100);
-
-        digitalWrite(bathroomLED_1, HIGH);
-        delay(100);
-        digitalWrite(bathroomLED_1, LOW);
-        delay(100);
-
-        digitalWrite(kitchenLED_1, HIGH);
-        delay(100);
-        digitalWrite(kitchenLED_1, LOW);
-        delay(100);
+       while(true)
+      {
+          digitalWrite(bedroomLED_1, HIGH);
+          delay(100);
+          digitalWrite(bedroomLED_1, LOW);
+          delay(100);
+          
+          digitalWrite(balconyLED_1, HIGH);
+          delay(100);
+          digitalWrite(balconyLED_1, LOW);
+          delay(100);
+  
+          digitalWrite(livingRoomLED_1, HIGH);
+          delay(100);
+          digitalWrite(livingRoomLED_1, LOW);
+          delay(100);
+  
+          digitalWrite(diningRoomLED_1, HIGH);
+          delay(100);
+          digitalWrite(diningRoomLED_1, LOW);
+          delay(100);
+  
+          digitalWrite(bathroomLED_1, HIGH);
+          delay(100);
+          digitalWrite(bathroomLED_1, LOW);
+          delay(100);
+  
+          digitalWrite(kitchenLED_1, HIGH);
+          delay(100);
+          digitalWrite(kitchenLED_1, LOW);
+          delay(100);
+      } 
     }
 }
 
 // change the scene
-String receive_user_input()
+void receive_user_input()
 {
 	if (Serial.available() > 0)
 	{
         String command = Serial.readString();
         if(command.equals("start"))
         {
+          Serial.println("All components have been started!");
             overall_control(true);
-            Serial.println("All components have been started!");
         }
         else if(command.equals("stop"))
         {
-            overall_control(false);
             Serial.println("All components have been stopped!");
+            overall_control(false);
         }
         else if(command.equals("bedroom"))
         {
@@ -539,12 +557,17 @@ String receive_user_input()
         }
         else if(command.equals("gathering"))
         {
-            kitchenSwitch = true;
+            gatheringSwitch = true;
             Serial.println("The living room gathering scene has been started!");
         }
         else if(command.equals("emergency"))
         {
-            kitchenSwitch = true;
+            emergencySwitch = true;
+            Serial.println("The emergency scene has been started!");
+        }
+        else if(command.equals("corridor"))
+        {
+            corridorSwitch = true;
             Serial.println("The emergency scene has been started!");
         }
         else
@@ -552,7 +575,7 @@ String receive_user_input()
             Serial.println("Your input is invalid!");
         }
 	}
-	delay(5);
+	delay(1000);
 }
 
 void control_modular()
@@ -568,7 +591,11 @@ void control_modular()
         kitchen_scene();
         living_room_gathering_scene();
     }
-    corridor_scene();
+
+    if(corridorSwitch)
+    {
+      corridor_scene();    
+    }
     emergency_scene();
 }
 
